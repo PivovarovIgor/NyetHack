@@ -2,6 +2,8 @@ import java.io.File
 import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
+const val WIDTH_OF_MENU = 10
+const val AMOUNT_ITEMS_OF_MENU = 3
 
 var playerGold = 10
 var playerSilver = 10
@@ -16,6 +18,36 @@ val menuList = File("data/tavern-menu-data.txt")
 
 fun main() {
 
+    println("*** Welcome to $TAVERN_NAME ***")
+    println()
+
+    menuList
+        .map {
+            it.split(',')
+        }.filter {
+            it.size == AMOUNT_ITEMS_OF_MENU
+        }.map {
+            val (type, name, price) = it
+            Triple(name, price, type)
+        }.run {
+            val padding = (maxOfOrNull {
+                it.first.length
+            } ?: 0) + (maxOfOrNull {
+                it.second.length
+            } ?: 0) + WIDTH_OF_MENU
+            groupBy { it.third }
+                .forEach { groupItem ->
+                    println("~[${groupItem.key}]~".let {
+                        it.padStart(padding / 2 + it.length / 2, ' ')
+                    })
+                    groupItem.value.forEach { item ->
+                        println("${item.first}${item.second.padStart(padding - item.first.length, '.')}")
+                    }
+                }
+        }
+
+    println()
+
     println(patronList)
     patronList.remove("Eli")
     patronList.add("Alex")
@@ -24,7 +56,7 @@ fun main() {
     patronList[0] = "Alexis"
     println(patronList)
 
-    (0..9).forEach {
+    (0..9).forEach { _ ->
         val first = patronList.shuffled().first()
         val last = lastName.shuffled().first()
         val name = "$first $last"
@@ -33,7 +65,7 @@ fun main() {
     println(uniquePatrons)
 
     var orderCount = 0
-    while (orderCount <= 9) {
+    while (orderCount <= 9 && menuList.isNotEmpty()) {
         placeOrder(uniquePatrons.shuffled().first(), menuList.shuffled().first())
         orderCount++
     }
