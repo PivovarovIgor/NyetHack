@@ -2,9 +2,15 @@ package com.brauer.nyethack
 
 fun main() {
 
-    val player = Player()
+    val player = Player("Madrigal")
+    println("player 1 created")
     player.castFireball()
     printPlayerStatus(player)
+
+    val player2 = Player("Kar")
+    player2.castFireball()
+    printPlayerStatus(player2)
+
     ////named arguments
 //    com.brauer.nyethack.printPlayerStatus(
 //        isBlessed = false,
